@@ -145,31 +145,32 @@ class _NumberState extends State<Number> {
                 ),
               ),
               SizedBox(height: 250.h,),
-              InkWell(
-                hoverColor: Colors.transparent,
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                  Varification(),));
-                },
-                child: Row(
+              Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      width: 60.w,
-                      height:60.h ,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColor.mainColor,
-                        borderRadius: BorderRadius.circular(500).r
-                      ),
-                      child: SvgPicture.asset('${AppAsset.imageUrl}Frame.svg',
-                          color: Color(0xffffffff),
+                    InkWell(
+                  hoverColor: Colors.transparent,
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) =>
+                        Varification(),));
+                  },
+                      child: Container(
+                        width: 60.w,
+                        height:60.h ,
                         alignment: Alignment.center,
-                    ),
+                        decoration: BoxDecoration(
+                          color: AppColor.mainColor,
+                          borderRadius: BorderRadius.circular(500).r
+                        ),
+                        child: SvgPicture.asset('${AppAsset.imageUrl}Frame.svg',
+                            color: Color(0xffffffff),
+                          alignment: Alignment.center,
+                      ),
+                      ),
                     ),
                   ],
                 ),
-              ),
             ],
           ),
         ),

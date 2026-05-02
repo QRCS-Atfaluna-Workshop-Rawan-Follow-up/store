@@ -50,12 +50,16 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xffffffff),
+      ),
       backgroundColor: Color(0Xffffffff),
       body: Padding(
         padding:  EdgeInsets.all(15).r,
         child: Column(
-          spacing: 30.h,
+          spacing: 15.h,
           children: [
+            SizedBox(height:15.h,),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               spacing: 20.w,

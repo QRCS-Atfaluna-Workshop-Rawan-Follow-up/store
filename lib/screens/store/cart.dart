@@ -151,7 +151,7 @@ class _CartState extends State<Cart> {
               },),
                 SizedBox(height: 20.h,),
                 SizedBox(
-                  height: 70.h,
+                  height: 80.h,
                   width: 364.w,
                   child: StoreElevatedBtn(value: "Go to Checkout", color: AppColor.mainColor,
                       borderRadius: BorderRadius.circular(19).r, onPressed: () {
