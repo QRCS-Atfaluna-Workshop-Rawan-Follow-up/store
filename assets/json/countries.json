@@ -1,0 +1,204 @@
+{
+  "Palestine": [
+    "Jerusalem",
+    "Nablus",
+    "Ramallah",
+    "Hebron",
+    "Jenin",
+    "Tulkarm",
+    "Qalqilya",
+    "Bethlehem",
+    "Jericho",
+    "Gaza"
+  ],
+
+  "Jordan": [
+    "Amman",
+    "Zarqa",
+    "Irbid",
+    "Aqaba",
+    "Salt",
+    "Madaba",
+    "Jerash",
+    "Mafraq",
+    "Karak",
+    "Tafilah"
+  ],
+
+  "Saudi Arabia": [
+    "Riyadh",
+    "Jeddah",
+    "Mecca",
+    "Medina",
+    "Dammam",
+    "Khobar",
+    "Taif",
+    "Tabuk",
+    "Abha",
+    "Hail"
+  ],
+
+  "United Arab Emirates": [
+    "Dubai",
+    "Abu Dhabi",
+    "Sharjah",
+    "Ajman",
+    "Al Ain",
+    "Ras Al Khaimah",
+    "Fujairah",
+    "Umm Al Quwain"
+  ],
+
+  "Qatar": [
+    "Doha",
+    "Al Rayyan",
+    "Al Wakrah",
+    "Al Khor",
+    "Umm Salal"
+  ],
+
+  "Kuwait": [
+    "Kuwait City",
+    "Hawalli",
+    "Farwaniya",
+    "Jahra",
+    "Ahmadi"
+  ],
+
+  "Bahrain": [
+    "Manama",
+    "Muharraq",
+    "Riffa",
+    "Isa Town",
+    "Hamad Town"
+  ],
+
+  "Oman": [
+    "Muscat",
+    "Salalah",
+    "Sohar",
+    "Nizwa",
+    "Sur",
+    "Barka"
+  ],
+
+  "Yemen": [
+    "Sana'a",
+    "Aden",
+    "Taiz",
+    "Hodeidah",
+    "Ibb",
+    "Mukalla"
+  ],
+
+  "Egypt": [
+    "Cairo",
+    "Alexandria",
+    "Giza",
+    "Luxor",
+    "Aswan",
+    "Port Said",
+    "Suez",
+    "Mansoura",
+    "Tanta",
+    "Ismailia"
+  ],
+
+  "Iraq": [
+    "Baghdad",
+    "Basra",
+    "Mosul",
+    "Erbil",
+    "Najaf",
+    "Karbala",
+    "Kirkuk",
+    "Sulaymaniyah"
+  ],
+
+  "Syria": [
+    "Damascus",
+    "Aleppo",
+    "Homs",
+    "Latakia",
+    "Hama",
+    "Tartus",
+    "Daraa"
+  ],
+
+  "Lebanon": [
+    "Beirut",
+    "Tripoli",
+    "Sidon",
+    "Tyre",
+    "Zahle",
+    "Jounieh"
+  ],
+
+  "Libya": [
+    "Tripoli",
+    "Benghazi",
+    "Misrata",
+    "Sabha",
+    "Zawiya"
+  ],
+
+  "Tunisia": [
+    "Tunis",
+    "Sfax",
+    "Sousse",
+    "Kairouan",
+    "Bizerte"
+  ],
+
+  "Algeria": [
+    "Algiers",
+    "Oran",
+    "Constantine",
+    "Annaba",
+    "Blida",
+    "Setif"
+  ],
+
+  "Morocco": [
+    "Rabat",
+    "Casablanca",
+    "Marrakesh",
+    "Tangier",
+    "Fes",
+    "Agadir"
+  ],
+
+  "Sudan": [
+    "Khartoum",
+    "Omdurman",
+    "Port Sudan",
+    "Nyala",
+    "Kassala"
+  ],
+
+  "Mauritania": [
+    "Nouakchott",
+    "Nouadhibou",
+    "Rosso",
+    "Kiffa"
+  ],
+
+  "Somalia": [
+    "Mogadishu",
+    "Hargeisa",
+    "Bosaso",
+    "Kismayo"
+  ],
+
+  "Djibouti": [
+    "Djibouti City",
+    "Ali Sabieh",
+    "Tadjoura"
+  ],
+
+  "Comoros": [
+    "Moroni",
+    "Mutsamudu",
+    "Fomboni"
+  ]
+}
