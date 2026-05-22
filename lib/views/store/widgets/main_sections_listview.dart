@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../widgets/store_text.dart';
+import '../../widgets/store_text.dart';
 
 class MainSectionListView extends StatelessWidget {
   const MainSectionListView({

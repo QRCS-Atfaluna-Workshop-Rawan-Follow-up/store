@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/theme/app_color.dart';
-import '../../../widgets/store_text.dart';
+import '../../widgets/store_text.dart';
 
 class StoreTextFormField extends StatelessWidget {
    StoreTextFormField({
@@ -12,7 +12,7 @@ class StoreTextFormField extends StatelessWidget {
      this.obscuringCharacter = '*',
      this.obscureText = false,
     required this.value,
-     this.suffixIcon = null,
+     this.suffixIcon = null, TextInputType? keyboardType,  int maxLines  = 5,
      // this.outlainBorderRadius = BorderRadius.circular(12).r,
   });
   late String value;

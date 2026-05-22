@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:store_app/core/theme/app_color.dart';
-import 'package:store_app/screens/store/home_screen.dart';
-import 'package:store_app/widgets/store_elevated_btn.dart';
-import 'package:store_app/widgets/store_text.dart';
+import 'package:store_app/views/store/home_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../widgets/store_elevated_btn.dart';
+import '../widgets/store_text.dart';
 
 class OrderAccept extends StatefulWidget {
   const OrderAccept({super.key});

@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../core/theme/app_asset.dart';
-import '../../../widgets/store_text.dart';
+import '../../widgets/store_text.dart';
+
 
 class SocialMediaContainer extends StatelessWidget {
   final Color containerColor ;

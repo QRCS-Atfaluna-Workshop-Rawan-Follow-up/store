@@ -25,7 +25,6 @@
 
 import 'package:get/get.dart';
 import '../data/models/api-service.dart';
-import '../data/models/category_model.dart';
 
 class CategoryController extends GetxController {
   MainCategoryResponse? categoryModel;
@@ -63,15 +62,49 @@ class CategoryController extends GetxController {
   }
 
   // دالة مساعدة للتأكد من الرابط قبل تمريره للـ UI
-  String getSafeImageUrl(int index) {
-    String? url = categoryModel?.data?[index].thumbnail;
-    if (url == null ||
-        url.isEmpty ||
-        url == "null" ||
-        !url.startsWith("http")) {
-      return ""; // إعادة نص فارغ ليتم معالجته في الواجهة
-    }
-    return url;
+//   String getSafeImageUrl(int index) {
+//     String? url = categoryModel?.data?[index].thumbnail;
+//     if (url == null ||
+//         url.isEmpty ||
+//         url == "null" ||
+//         !url.startsWith("http")) {
+//       return ""; // إعادة نص فارغ ليتم معالجته في الواجهة
+//     }
+//     return url;
+//   }
+//   String getSafeImageUrl(int index) {
+//     String? url = categoryModel?.data?[index].thumbnail;
+//
+//     // إذا كان حقل الـ thumbnail فارغاً، نحاول جلب أول صورة من مصفوفة الـ images
+//     if (url == null || url.isEmpty || url == "null") {
+//       if (categoryModel?.data?[index].images != null && categoryModel!.data![index].images!.isNotEmpty) {
+//         url = categoryModel!.data![index].images![0];
+//       }
+//     }
+//
+//     if (url == null || url.isEmpty || url == "null") {
+//       return "";
+//     }
+//
+//     // 💡 الحل السحري: إزالة الأقواس المربعة [ ] من البداية والنهاية إن وجدت
+//     url = url.replaceAll('[', '').replaceAll(']', '').trim();
+//
+//     if (!url.startsWith("http")) {
+//       return "";
+//     }
+//
+//     return url;
+//   }
+  // دالة تنظيف روابط الصور من الأقواس المربعة والفراغات
+  String getCleanImageUrl(String? url) {
+    if (url == null || url.isEmpty || url == "null") return "";
+    return url.replaceAll('[', '').replaceAll(']', '').trim();
+  }
+
+  // دالة لتنظيف نصوص التفاصيل من وسوم الـ HTML القادمة من السيرفر
+  String getCleanDetails(String? htmlText) {
+    if (htmlText == null || htmlText.isEmpty) return "No details available.";
+    return htmlText.replaceAll(RegExp(r'<[^>]*>'), '').trim();
   }
 }
 
@@ -146,58 +179,8 @@ class Category {
     image = json['image'];
   }
 }
-
-// class ProductData {
-
-// int? id;
-
-// String? name;
-
-// String? thumbnail;
-
-// List<String>? images;
-
-// double? finalUnitPrice;
-
-// bool? isFavorite;
-
-// // أضفت باقي الحقول الضرورية فقط للاختصار، يمكنك إضافة البقية بنفس النمط
-
-//
-
-// ProductData({this.id, this.name, this.thumbnail, this.images, this.finalUnitPrice, this.isFavorite});
-
-//
-
-// ProductData.fromJson(Map<String, dynamic> json) {
-
-// id = json['id'];
-
-// name = json['name'];
-
-// isFavorite = json['is_favorite'];
-
-// finalUnitPrice = json['final_unit_price']?.toDouble();
-
-//
-
-// // حماية ضد خطأ file:///null
-
-// var thumb = json['thumbnail'];
-
-// thumbnail = (thumb == "null" || thumb == null) ? "" : thumb;
-
-//
-
-// if (json['images'] != null) {
-
-// images = json['images'].cast<String>();
-
-// }
-
-// }
-
-// }
+List<ProductData> firstSectionProducts = [];
+List<ProductData> secondSectionProducts = [];
 
 class ProductData {
   int? id;
@@ -307,8 +290,6 @@ class ProductData {
   }
 }
 
-// كلاسات مساعدة معدلة
-
 class Pagination {
   int? total;
 
@@ -330,5 +311,18 @@ class AppliedFilters {
 
   AppliedFilters.fromJson(Map<String, dynamic> json) {
     singleCategoryId = json['single_category_id'];
+  }
+
+  void splitProducts(List<ProductData> allProducts) {
+    if (allProducts.length >= 4) {
+      // نأخذ أول منتجين للقسم الأول
+      firstSectionProducts = allProducts.sublist(0, 2);
+      // نأخذ المنتجين الثالث والرابع للقسم الثاني
+      secondSectionProducts = allProducts.sublist(2, 4);
+    } else {
+      // في حال كان العدد أقل من 4، نضع كل المنتجات في القسم الأول
+      firstSectionProducts = allProducts;
+      secondSectionProducts = [];
+    }
   }
 }

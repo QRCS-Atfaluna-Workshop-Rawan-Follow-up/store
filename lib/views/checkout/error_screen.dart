@@ -4,10 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:store_app/core/theme/app_color.dart';
-import 'package:store_app/widgets/store_elevated_btn.dart';
-import 'package:store_app/widgets/store_text.dart';
+
 
 import '../store/home_screen.dart';
+import '../widgets/store_elevated_btn.dart';
+import '../widgets/store_text.dart';
 
 class ErrorScreen extends StatefulWidget {
   const ErrorScreen({super.key});

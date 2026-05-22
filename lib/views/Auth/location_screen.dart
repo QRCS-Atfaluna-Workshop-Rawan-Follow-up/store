@@ -2,15 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:store_app/core/theme/app_color.dart';
-import 'package:store_app/screens/Auth/singin_screen.dart';
-import 'package:store_app/screens/Auth/signup_screen.dart';
-import 'package:store_app/widgets/store_elevated_btn.dart';
-import 'package:store_app/widgets/store_text.dart';
+import 'package:store_app/routes/app_routes.dart';
+import 'package:store_app/views/Auth/singin_screen.dart';
+import 'package:store_app/views/Auth/signup_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
+import 'package:get/get.dart';
+import '../../core/localization/storaged_services.dart';
 import '../../services/json_service.dart';
+import '../widgets/store_elevated_btn.dart';
+import '../widgets/store_text.dart';
 
 
 class Location extends StatefulWidget {
@@ -21,11 +23,12 @@ class Location extends StatefulWidget {
 }
 
 class _LocationState extends State<Location> {
+  final formKey = GlobalKey<FormState>();
   List<dynamic> countries = [];
   List<dynamic> cities = [];
   Map<String, dynamic> data = {};
-  String? selectedCountry;
-  String? selectedCity;
+   String? selectedCountry;
+   String? selectedCity;
   @override
   void initState() {
     // TODO: implement initState
@@ -59,53 +62,68 @@ class _LocationState extends State<Location> {
                 color: Color(0xff7C7C7C), fontWeight: FontWeight.w300, fontSize: 16.sp,
               textAlign: TextAlign.center,),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StoreText(value: "Your Zone", color: Color(0xff7C7C7C),
-                      fontWeight: FontWeight.w300, fontSize: 16.sp),
-                  DropdownButtonFormField<String>(
-                    initialValue: selectedCountry,
-                    hint:StoreText(value:"Select your zone",fontSize: 18.sp,
-                      fontWeight: FontWeight.w300, color: Color(0xff7C7C7C),),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    decoration: _inputDecoration(),
-                    items: countries.map((country) {
-                      return DropdownMenuItem<String>(
-                        value: country,
-                        child: Text(country),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCountry = value;
-                        selectedCity = null;
-                        cities = List<String>.from(data[value]);
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20.h,),
-                  StoreText(value: "Your Area", color: Color(0xff7C7C7C),
-                      fontWeight: FontWeight.w300, fontSize: 16.sp),
-                  DropdownButtonFormField<String>(
-                    initialValue: selectedCity,
-                    hint: StoreText(value: "Select City",fontSize: 16.sp,
-                      fontWeight: FontWeight.w300, color: Color(0xff121212),),
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    decoration: _inputDecoration(),
-                    items: cities.map((city) {
-                      return DropdownMenuItem<String>(
-                        value: city,
-                        child: Text(city),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCity = value;
-                      });
-                    },
-                  )
-                ],
+              Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StoreText(value: "Your Zone", color: Color(0xff7C7C7C),
+                        fontWeight: FontWeight.w300, fontSize: 16.sp),
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedCountry,
+                      hint:StoreText(value:"Select your zone",fontSize: 18.sp,
+                        fontWeight: FontWeight.w300, color: Color(0xff7C7C7C),),
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      decoration: _inputDecoration(),
+                      items: countries.map((country) {
+                        return DropdownMenuItem<String>(
+                          value: country,
+                          child: Text(country),
+                        );
+                      }).toList(),
+                      validator: (value) {
+                        if(value!.isEmpty){
+                           return "please select you country";
+                        }
+                          return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCountry = value!;
+                          // selectedCity = null;
+                          cities = List<String>.from(data[value]);
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20.h,),
+                    StoreText(value: "Your Area", color: Color(0xff7C7C7C),
+                        fontWeight: FontWeight.w300, fontSize: 16.sp),
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedCity,
+                      hint: StoreText(value: "Select City",fontSize: 16.sp,
+                        fontWeight: FontWeight.w300, color: Color(0xff121212),),
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      decoration: _inputDecoration(),
+                      items: cities.map((city) {
+                        return DropdownMenuItem<String>(
+                          value: city,
+                          child: Text(city),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCity = value!;
+                        });
+                      },
+                      validator: (value) {
+                        if(value!.isEmpty){
+                          return "please select you area";
+                        }
+                        return null;
+                      },
+                    )
+                  ],
+                ),
               ),
             SizedBox(height: 25.h,),
             SizedBox(
@@ -113,6 +131,17 @@ class _LocationState extends State<Location> {
               width: 364.w,
               child: StoreElevatedBtn(value: "Submit", color: AppColor.mainColor,
                   borderRadius: BorderRadius.circular(15).r, onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      final storageService = Get.find<StorageService>();
+                      storageService.write('zone', selectedCountry);
+                      storageService.write('area', selectedCity);
+                      EasyLoading.showSuccess("Location Selected");
+                      Get.toNamed(AppRoutes.signup);
+                    } else {
+                      EasyLoading.showError("Please select Zone and Area");
+                    }
+
+
                   // var logger = Logger();
 
                   // logger.d("Logger is working!");
@@ -122,7 +151,7 @@ class _LocationState extends State<Location> {
                  //   EasyLoading.show(status: 'loading...');
                  //   EasyLoading.removeAllCallbacks();
                  // });
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Signup(),));
+                 //    Navigator.push(context, MaterialPageRoute(builder: (context) => Signup(),));
                   },),
             )
           ],

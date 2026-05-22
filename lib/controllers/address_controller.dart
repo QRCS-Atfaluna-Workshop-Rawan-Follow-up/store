@@ -36,75 +36,82 @@ class AddressController extends GetxController {
   void onReady() {
     super.onReady();
     // التأكد من استقبال البيانات بعد جاهزية الصفحة تماماً
-    if (Get.arguments != null && Get.arguments is AddressData) {
-      fillFieldsForUpdate(Get.arguments);
-    }
-  }
-  @override
-  void onClose() {
-    // يفضل عمل dispose لكل الكنترولرز للحفاظ على أداء الجهاز
-    titleController.dispose();
-    recipientController.dispose();
-    cityController.dispose();
-    areaController.dispose();
-    streetController.dispose();
-    buildingController.dispose();
-    phoneController.dispose();
-    super.onClose();
+
   }
 
   String? get token => Get.find<StorageService>().read('token');
 
   // دالة تعبئة الحقول (تم حذف Get.toNamed منها لتجنب التكرار)
-  void fillFieldsForUpdate(AddressData address) {
-    updatingAddressId = address.id; // حفظ الـ ID لاستخدامه في دالة الـ update
-    titleController.text = address.title ?? "";
-    recipientController.text = address.recipientName ?? "";
-    cityController.text = address.city ?? "";
-    areaController.text = address.area ?? "";
-    streetController.text = address.street ?? "";
-    buildingController.text = address.buildingNumber ?? "";
-    phoneController.text = address.mobile ?? "";
-    update();
-  }
+  // void fillFieldsForUpdate(AddressData address) {
+  //   updatingAddressId = address.id; // حفظ الـ ID لاستخدامه في دالة الـ update
+  //   titleController.text = address.title ?? "";
+  //   recipientController.text = address.recipientName ?? "";
+  //   cityController.text = address.city ?? "";
+  //   areaController.text = address.area ?? "";
+  //   streetController.text = address.street ?? "";
+  //   buildingController.text = address.buildingNumber ?? "";
+  //   phoneController.text = address.mobile ?? "";
+  //   update();
+  // }
 
   // دالة الإضافة (Submit)
-  Future<void> submitAddress({
-    required String title,required String recipientName,required String city,
-    required String area, required String street,
-    required String buildingNumber, required String mobile,
-    required String addressType,required String countryCode,
-}) async {
+  Future<bool> addNewAddress(
+      {
+    required String addressType,
+    required String recipientName,
+    required String city,
+    required String block,
+    required String buildingNumber,
+    required String countryCode,
+    required String mobile,
+    required String latitude,
+    required String longitude,
+    required String area,
+  })
+  async {
     try {
-      EasyLoading.show(status: 'جاري الحفظ...');
-      final response = await http.post(
+      EasyLoading.show(status: 'جاري حفظ العنوان...');
+
+      // 🎯 استخدام MultipartRequest لأن السيرفر يتوقع form-data
+      var request = http.MultipartRequest(
+        'POST',
         Uri.parse("https://tullana.toldpath.com/api/customer/profile/address/add"),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: {
-          "title": titleController.text,
-          "recipient_name": recipientController.text,
-          "city": cityController.text,
-          "area": areaController.text,
-          "street": streetController.text,
-          "building_number": buildingController.text,
-          "mobile": phoneController.text,
-          "address_type": "Home",
-          "country_code": "+966",
-        },
       );
 
+      // إضافة الـ Headers
+      request.headers.addAll({
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token', // تأكدي من تمرير التوكن الخاص بكِ
+      });
+
+      // 📜 إضافة الحقول بأسماء الـ Keys المطابقة تماماً لـ Postman
+      request.fields['address_type'] = addressType;
+      request.fields['recipient_name'] = recipientName;
+      request.fields['city'] = city;
+      request.fields['block'] = block;
+      request.fields['building_number'] = buildingNumber;
+      request.fields['country_code'] = countryCode;
+      request.fields['mobile'] = mobile;
+      request.fields['latitude'] = latitude;
+      request.fields['longitude'] = longitude;
+      request.fields['area'] = area;
+
+      // إرسال الطلب واستقبال الرد
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
       var data = json.decode(response.body);
+
       if (response.statusCode == 200 && data['status'] == true) {
-        EasyLoading.showSuccess("تمت الإضافة بنجاح");
-        Get.back(result: true); // العودة للخلف مع إرجاع قيمة لتحديث القائمة
+        EasyLoading.showSuccess("تم إضافة العنوان بنجاح");
+        return true;
       } else {
-        EasyLoading.showError("خطأ: ${data['message']}");
+        EasyLoading.showError("فشل الإضافة: ${data['message'] ?? ''}");
+        return false;
       }
     } catch (e) {
-      EasyLoading.showError("تعذر الاتصال");
+      print("Error adding address: $e");
+      EasyLoading.showError("حدث خطأ في الاتصال");
+      return false;
     }
   }
 
@@ -114,23 +121,30 @@ class AddressController extends GetxController {
     required int id,
     required String title,
     required String recipientName,
+    required int block,
+    required int buildingNumber,
     required String city,
     required String area,
     required String mobile,
-  }) async {
+  }) async
+  {
     try {
-      EasyLoading.show(status: 'جاري التعديل...');
+      EasyLoading.show(status: 'Updating...');
 
       // تأكدي من مسار الـ API الصحيح للتعديل
-      var response = await http.post(
+      var response = await http.put(
         Uri.parse(
-            "https://tullana.toldpath.com/api/customer/profile/address/update/$id"),
+            "https://tullana.toldpath.com/api/customer/profile/address/update"),
         headers: {
           'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': 'Bearer $token',
         },
         body: {
+          'id': id.toString(),
           'title': title,
+          'block': block.toString(),
+          'building_number': buildingNumber.toString(),
           'recipient_name': recipientName,
           'city': city,
           'area': area,
@@ -141,21 +155,18 @@ class AddressController extends GetxController {
       var data = json.decode(response.body);
 
       if (response.statusCode == 200 && data['status'] == true) {
-        EasyLoading.showSuccess("تم التعديل بنجاح");
-
-        // السطر الأهم: العودة للصفحة السابقة مع إشارة نجاح
+        EasyLoading.showSuccess("Updated successfully");
         Get.back(result: true);
       } else {
-        EasyLoading.showError(data['message'] ?? "فشل التعديل");
+        EasyLoading.showError(data['message'] ?? "Update failed");
       }
     } catch (e) {
-      EasyLoading.showError("خطأ في الاتصال");
+      EasyLoading.showError("Connection error");
     }
-  }  bool isLoading = false;
-  List<AddressData> addressList = [];
+  }
+  bool isLoading = false;
 
-  // bool isLoading = false; // متغير لمتابعة حالة التحميل
-  // List<AddressData> addressList = []; // القائمة التي ستعرض في الواجهة
+  List<AddressModel> addressList = []; // ✅ تم تعديل الاسم ليتطابق مع الموديل (AddressModel)
 
   Future<void> fetchAddresses() async {
     try {
@@ -166,52 +177,59 @@ class AddressController extends GetxController {
         Uri.parse("https://tullana.toldpath.com/api/customer/profile/address/list"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer $token', // تأكدي أن التوكن موجود
+          'Authorization': 'Bearer $token', // تأكدي من تعريف متغير الـ token لديكِ
         },
       );
 
       var data = json.decode(response.body);
 
       if (response.statusCode == 200 && data['status'] == true) {
-        // تحويل البيانات القادمة من JSON إلى قائمة من موديل AddressData
-        Iterable list = data['data'];
-        addressList = list.map((model) => AddressData.fromJson(model)).toList();
+        if (data['data'] != null) {
+          Iterable list = data['data'];
+          // ✅ تحويل البيانات بأمان كلياً بناءً على الموديل الجديد AddressModel
+          addressList = list.map((model) => AddressModel.fromJson(model)).toList();
+        } else {
+          addressList = [];
+        }
       } else {
-        EasyLoading.showError("فشل جلب العناوين: ${data['message']}");
+        // أضفت تلميحاً في حال لم يرسل السيرفر رسالة خطأ صريحة
+        String message = data['message'] ?? "خطأ غير معروف";
+        EasyLoading.showError("فشل جلب العناوين: $message");
       }
     } catch (e) {
       print("Error fetching addresses: $e");
       EasyLoading.showError("حدث خطأ في الاتصال");
     } finally {
       isLoading = false;
-      update(); // تحديث الواجهة لإخفاء مؤشر التحميل وعرض البيانات
-    }}
-
-  Future<void> deleteAddress(int addressId) async {
-    try {
-      EasyLoading.show(status: 'جاري الحذف...');
-
-      final response = await http.delete(
-        Uri.parse("https://tullana.toldpath.com/api/customer/profile/address/delete/$addressId"),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      var data = json.decode(response.body);
-
-      if (response.statusCode == 200 && data['status'] == true) {
-        // حذف العنصر من القائمة المحلية فوراً لتحديث الواجهة بسرعة
-        addressList.removeWhere((element) => element.id == addressId);
-        update();
-
-        EasyLoading.showSuccess("تم حذف العنوان بنجاح");
-      } else {
-        EasyLoading.showError("فشل الحذف: ${data['message']}");
-      }
-    } catch (e) {
-      EasyLoading.showError("حدث خطأ أثناء الحذف");
+      update(); // تحديث الواجهة لإخفاء مؤشر التحميل وعرض البيانات الحية
     }
   }
+
+  // Future<void> deleteAddress(int addressId) async {
+  //   try {
+  //     EasyLoading.show(status: 'جاري الحذف...');
+  //
+  //     final response = await http.delete(
+  //       Uri.parse("https://tullana.toldpath.com/api/customer/profile/address/delete/$addressId"),
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
+  //
+  //     var data = json.decode(response.body);
+  //
+  //     if (response.statusCode == 200 && data['status'] == true) {
+  //       // حذف العنصر من القائمة المحلية فوراً لتحديث الواجهة بسرعة
+  //       addressList.removeWhere((element) => element.id == addressId);
+  //       update();
+  //
+  //       EasyLoading.showSuccess("تم حذف العنوان بنجاح");
+  //     } else {
+  //       EasyLoading.showError("فشل الحذف: ${data['message']}");
+  //     }
+  //   } catch (e) {
+  //     EasyLoading.showError("حدث خطأ أثناء الحذف");
+  //   }
+  // }
   }

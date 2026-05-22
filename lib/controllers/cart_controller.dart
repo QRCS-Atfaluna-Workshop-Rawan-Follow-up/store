@@ -188,8 +188,9 @@ class CartController extends GetxController {
   }
   void incrementQuantity(CartItem item) {
     int newQty = (item.quantity ?? 1) + 1;
-    updateCartQuantity(item.id, newQty);
     fetchCart();
+    updateCartQuantity(item.id, newQty);
+
   }
 
   void decrementQuantity(CartItem item) {

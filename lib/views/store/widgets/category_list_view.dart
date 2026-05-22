@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/theme/app_color.dart';
-import '../../../widgets/store_text.dart';
+import '../../widgets/store_text.dart';
 
 class ListviewCategory extends StatelessWidget {
   const ListviewCategory({

@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:store_app/core/theme/app_asset.dart';
-import 'package:store_app/screens/store/widgets/search_text_feild.dart';
+import 'package:store_app/views/store/widgets/search_text_feild.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:store_app/widgets/store_text.dart';
 
 import '../../core/theme/app_color.dart';
+import '../widgets/store_text.dart';
 
 class Explore extends StatefulWidget {
   const Explore({super.key});

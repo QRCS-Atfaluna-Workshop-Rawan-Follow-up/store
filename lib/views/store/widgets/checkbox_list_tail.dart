@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_color.dart';
-import '../../../widgets/store_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../widgets/store_text.dart';
 
 class CheckboxListTileWidget extends StatelessWidget {
   const CheckboxListTileWidget({

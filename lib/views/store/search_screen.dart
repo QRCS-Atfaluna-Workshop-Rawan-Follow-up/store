@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
-import 'package:store_app/screens/store/widgets/category_list_view.dart';
-import 'package:store_app/screens/store/widgets/search_text_feild.dart';
+import 'package:store_app/views/store/widgets/category_list_view.dart';
+import 'package:store_app/views/store/widgets/search_text_feild.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../core/theme/app_asset.dart';
-import '../../widgets/store_text.dart';
 import 'filter_screen.dart';
 
 class Search extends StatefulWidget {

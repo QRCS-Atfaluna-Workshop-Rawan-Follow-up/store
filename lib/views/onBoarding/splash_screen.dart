@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:store_app/core/theme/app_color.dart';
-import 'package:store_app/screens/onBoarding/onboarding_screen.dart';
+import 'package:store_app/views/onBoarding/onboarding_screen.dart';
+import 'package:get/get.dart';
+
+import '../../routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,8 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(milliseconds: 500),() {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-          Onboarding(),));
+      Get.offAndToNamed(AppRoutes.onboarding);
     });
   }
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DropdownMenu {
-  Widget _buildDropdown({
+  Widget buildDropdown({
     required String label,
     required String hint,
     required String? value,

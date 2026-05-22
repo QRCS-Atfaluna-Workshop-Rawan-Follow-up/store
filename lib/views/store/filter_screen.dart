@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_color.dart';
-import 'package:store_app/screens/store/widgets/checkbox_list_tail.dart';
-import 'package:store_app/widgets/store_text.dart';
+import 'package:store_app/views/store/widgets/checkbox_list_tail.dart';
+
+import '../widgets/store_text.dart';
+
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});

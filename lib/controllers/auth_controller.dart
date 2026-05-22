@@ -1,104 +1,3 @@
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-// import 'package:get/get.dart';
-// import 'package:get_storage/get_storage.dart';
-// import 'package:store_app/routes/app_routes.dart';
-//
-// import '../../core/localization/storaged_services.dart';
-//
-// class AuthController extends GetxController {
-//   var isLoading = false.obs;
-//   final storageService = Get.find<StorageService>();
-//   // final storage = GetStorage();
-//   // late final String name;
-//   // late final String password;
-//
-//   Future login({required String email, required String password}) async {
-//     isLoading.value = true;
-//     try {
-//       var response = await http.post(
-//         Uri.parse("https://tullana.toldpath.com/api/customer/auth/login"),
-//         headers: {'Accept': 'application/json'},
-//         body: {'email': email, "password": password},
-//       );
-//       var decodedJson = jsonDecode(response.body);
-//       if (response.statusCode == 200) {
-//         String token = decodedJson['token'];
-//         storageService.write('token', token);
-//         storageService.write('isLoggedIn', true);
-//
-//         Get.snackbar("successful", decodedJson['message']);
-//         Get.offAllNamed(AppRoutes.home);
-//       } else {
-//         if (decodedJson['errors'] != null &&
-//             decodedJson['errors'] is List &&
-//             decodedJson['errors'].isNotEmpty) {
-//           String errorMessage = decodedJson['errors'][0]['message'].toString();
-//           Get.snackbar("Error", errorMessage);
-//         }
-//       }
-//     } catch (e) {
-//       Get.snackbar("Error", e.toString());
-//       print(e);
-//     } finally {
-//       isLoading.value = false;
-//     }
-//   }
-//
-//   Future signup(
-//       {
-//     required String firstName,
-//     required String lastName,
-//     required String email,
-//     required String phone,
-//     required String password,
-//     required String passwordConfirmation,
-//   }) async {
-//     isLoading.value = true;
-//     try {
-//       var response = await http.post(
-//         Uri.parse("https://tullana.toldpath.com/api/customer/auth/register"),
-//         headers: {
-//           'Accept': 'application/json',
-//           'Content-Type': 'application/json',
-//         },
-//         body: jsonEncode(
-//           {
-//             'email': email,
-//             "password": password,
-//             "last_name": lastName,
-//             "first_name": firstName,
-//             "phone": phone,
-//             "password_confirmation": passwordConfirmation,
-//             'country_code': 'PS',
-//             'agreed_with_terms': true
-//           },
-//         )
-//       );
-//       var decodedJson = jsonDecode(response.body);
-//       if (response.statusCode == 200 || response.statusCode == 201) {
-//         String token = decodedJson['token'];
-//         storageService.write('token', token);
-//         storageService.write('isLoggedIn', true);
-//
-//         Get.snackbar("successful", decodedJson['message']);
-//         Get.offAllNamed(AppRoutes.home);
-//       } else {
-//         if (decodedJson['errors'] != null &&
-//             decodedJson['errors'] is List &&
-//             decodedJson['errors'].isNotEmpty) {
-//           String errorMessage = decodedJson['errors'][0]['message'].toString();
-//           Get.snackbar("Error", errorMessage);
-//         }
-//       }
-//     } catch (e) {
-//       Get.snackbar("Error", e.toString());
-//       print(e);
-//     } finally {
-//       isLoading.value = false;
-//     }
-//   }
-// }
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -106,17 +5,15 @@ import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart'; // تأكدي من استيرادها
 import 'package:store_app/routes/app_routes.dart';
 import '../core/localization/storaged_services.dart';
-import '../views/Auth/reset_password.dart';
 import 'otp_model.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class AuthController extends GetxController {
   final storageService = Get.find<StorageService>();
 
   Future login({required String email, required String password}) async {
     try {
-      // 1. إظهار التحميل وقفل الشاشة
       EasyLoading.show(status: 'Now is login in please wait...',
-          maskType: EasyLoadingMaskType.custom);
+        maskType: EasyLoadingMaskType.black,);
 
       var response = await http.post(
         Uri.parse("https://tullana.toldpath.com/api/customer/auth/login"),
@@ -130,7 +27,6 @@ class AuthController extends GetxController {
         String token = decodedJson['token'];
         storageService.write('token', token);
         storageService.write('isLoggedIn', true);
-        // 2. إخفاء التحميل وإظهار نجاح
         EasyLoading.showSuccess(decodedJson['message'] ?? "Successful login");
 
         Get.offAllNamed(AppRoutes.home);
@@ -140,29 +36,19 @@ class AuthController extends GetxController {
             (decodedJson['errors'] as List).isNotEmpty) {
           errorMessage = decodedJson['errors'][0]['message'].toString();
         }
-        // 3. إظهار الخطأ للمستخدم
         EasyLoading.showError(errorMessage);
       }
     } catch (e) {
       EasyLoading.showError("حدث خطأ في الاتصال");
       print(e);
     } finally {
-      // التأكد من إغلاق التحميل في حال لم يتم إغلاقه
       EasyLoading.dismiss();
     }
   }
-
-  // --- دالة إنشاء حساب جديد ---
-  Future signup({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String phone,
-    required String password,
-    required String passwordConfirmation,
+  Future signup({required String firstName, required String lastName, required String email,
+    required String phone, required String password, required String passwordConfirmation,
   }) async {
     try {
-      // 1. إظهار التحميل
       EasyLoading.show(status: 'please wait create account now ..',
           maskType: EasyLoadingMaskType.black);
 
@@ -210,17 +96,11 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     try {
-      // 1. إظهار تحميل بسيط
       EasyLoading.show(status: 'جاري تسجيل الخروج...');
 
-      // 2. حذف التوكن وحالة تسجيل الدخول من التخزين
       storageService.remove('token');
       storageService.write('isLoggedIn', false);
-
-      // 3. إظهار رسالة نجاح
       EasyLoading.showSuccess('Logout is Success');
-
-      // 4. الانتقال لصفحة تسجيل الدخول وحذف كل الصفحات السابقة من الذاكرة
       Get.offAllNamed(AppRoutes.login);
     } catch (e) {
       EasyLoading.showError('something make error');
@@ -229,39 +109,9 @@ class AuthController extends GetxController {
     }
   }
 
-  // Future<void> verifyEmail({required String email}) async {
-  //   try {
-  //     // استدعاء الـ API (تأكدي من تغيير الرابط للرابط الصحيح لديكِ)
-  //     var response = await http.post(
-  //       Uri.parse(
-  //           "https://tullana.toldpath.com/api/customer/auth/forgot-password"),
-  //       body: {"email": email},
-  //     );
-  //
-  //     EasyLoading.dismiss();
-  //
-  //     if (response.statusCode == 200) {
-  //       // إذا كان الإيميل موجوداً (السيرفر عادة يرجع 200)
-  //       EasyLoading.showSuccess("Email verified. Sending OTP...");
-  //       Get.toNamed(AppRoutes.OTP, arguments: email);
-  //     } else if (response.statusCode == 404) {
-  //       // إذا كان الإيميل غير مسجل
-  //       EasyLoading.showError("This email is not registered in our system");
-  //     } else {
-  //       EasyLoading.showError("Something went wrong, try again");
-  //     }
-  //   } catch (e) {
-  //     EasyLoading.dismiss();
-  //     // هنا ضعف النت قد يسبب خطأ، لذا يجب معالجته
-  //     EasyLoading.showError("Connection error. Check your internet.");
-  //   }
-  // }
-
-  // داخل AuthController
   Future<void> sendForgotPasswordEmail(String email) async {
     EasyLoading.show(
-        status: 'Sending code...'); // تم تحويلها للإنجليزية كما طلبتِ
-
+        status: 'Sending code...');
     try {
       final response = await http.post(
         Uri.parse("https://tullana.toldpath.com/api/customer/auth/forgot-password"),
@@ -270,17 +120,14 @@ class AuthController extends GetxController {
       );
 
       var jsonResponse = json.decode(response.body);
-
-      // استخدام الموديل الجديد
       OtpResponseModel otpRes = OtpResponseModel.fromJson(jsonResponse);
 
       if (response.statusCode == 200 && otpRes.status == "otp_sent") {
         EasyLoading.showSuccess(otpRes.message ?? "Code sent to your email");
 
-        // الانتقال لشاشة الـ OTP وتمرير البيانات
         Get.toNamed(AppRoutes.OTP, arguments: {
           'email': email,
-          'token': otpRes.otp // نمرر الـ OTP للتجربة السريعة (Testing)
+          'token': otpRes.otp
         });
       } else {
         EasyLoading.showError("Failed to send code");
@@ -291,84 +138,13 @@ class AuthController extends GetxController {
       EasyLoading.dismiss();
     }
   }
-  // Future<void> verifyOtpCode({required String email, required String code}) async {
-  //   EasyLoading.show(status: 'Verifying code...');
-  //
-  //   try {
-  //     // بناءً على صورة 5.png الرابط هو verify-otp
-  //     var request = http.MultipartRequest(
-  //       'POST',
-  //       Uri.parse("https://tullana.toldpath.com/api/customer/auth/verify-otp"),
-  //     );
-  //
-  //     // إضافة البيانات بنظام form-data كما هو ظاهر في الصورة 5.png
-  //     request.fields.addAll({
-  //       'email': email,
-  //       'token': code, // المفتاح في الصورة هو 'token' والقيمة هي الكود
-  //     });
-  //
-  //     // إرسال الطلب
-  //     var streamedResponse = await request.send();
-  //     var response = await http.Response.fromStream(streamedResponse);
-  //     var data = json.decode(response.body);
-  //
-  //     if (response.statusCode == 200) {
-  //       EasyLoading.showSuccess("Code verified successfully!");
-  //
-  //       // ✅ الانتقال لصفحة تعيين كلمة المرور الجديدة وتمرير الإيميل
-  //       Get.offNamed(AppRoutes.resetPassword, arguments: email);
-  //     } else {
-  //       EasyLoading.showError(data['message'] ?? "Invalid code, please try again");
-  //     }
-  //   } catch (e) {
-  //     print("Verify Error: $e");
-  //     EasyLoading.showError("Connection error");
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
-//   Future<void> verifyOtpCode({required String email, required String code}) async {
-//     EasyLoading.show(status: 'Verifying code...');
-//
-//     try {
-//       final response = await http.post(
-//         // تأكدي من أن الرابط هو verify-code كما في معظم الـ APIs الخاصة بكِ
-//         Uri.parse("https://tullana.toldpath.com/api/customer/auth/verify-code"),
-//         body: {
-//           'email': email,
-//           'token': code, // تأكدي هل هو 'code' أم 'token'؟ (الصورة السابقة كانت تقول code)
-//         },
-//       );
-//
-//       var data = json.decode(response.body);
-//
-//       // التحقق من حالة الاستجابة
-//       if (response.statusCode == 200 && (data['status'] == true || data['status'] == "success")) {
-//         EasyLoading.showSuccess("Code verified successfully!");
-//
-//         // الانتقال لصفحة كلمة المرور الجديدة
-//         // تأكدي أن AppRoutes.resetPassword معرف في ملف الـ Routes
-//         Get.offAllNamed(AppRoutes.resetPassword, arguments: email);
-//       } else {
-//         // إظهار رسالة الخطأ القادمة من السيرفر
-//         EasyLoading.showError(data['message'] ?? "Invalid code, please try again");
-//       }
-//     } catch (e) {
-//       print("Verify OTP Error: $e");
-//       EasyLoading.showError("Connection error");
-//     } finally {
-//       EasyLoading.dismiss();
-//     }
-//   }
   Future<void> verifyOtpCode({required String email, required String code}) async {
     EasyLoading.show(status: 'Verifying code...');
-
     try {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse("https://tullana.toldpath.com/api/customer/auth/verify-otp"),
       );
-
       request.fields.addAll({
         'email': email,
         'token': code,
@@ -382,9 +158,9 @@ class AuthController extends GetxController {
         EasyLoading.showSuccess("Code verified successfully!");
         Get.offNamed(AppRoutes.resetPassword, arguments: {
           'email': email,
-          'token': code, // هكذا سيعرف صفحة التعديل ما هو الكود
+          'token': code,
         });
-        print('TOKEN IS : ${code}');
+        // print('TOKEN IS : ${code}');
       } else {
         EasyLoading.showError(data['message'] ?? "Invalid code");
       }
@@ -412,18 +188,17 @@ class AuthController extends GetxController {
         },
         body: jsonEncode({
           'email': email,
-          'token': otpToken, // الكود المكون من 4 خانات
+          'token': otpToken,
           'password': newPassword,
-          'confirm_password': confirmPassword, // تأكدي من مطابقة الاسم كما في الصورة 8.png
+          'confirm_password': confirmPassword,
         }),
       );
-      print({
-        'email': email,
-        'token': otpToken, // الكود المكون من 4 خانات
-        'password': newPassword,
-        'confirm_password': confirmPassword, // تأكدي من مطابقة الاسم كما في الصورة 8.png
-      });
-
+      // print({
+      //   'email': email,
+      //   'token': otpToken,
+      //   'password': newPassword,
+      //   'confirm_password': confirmPassword,
+      // });
       var data = json.decode(response.body);
 
       if (response.statusCode == 200) {
@@ -435,6 +210,107 @@ class AuthController extends GetxController {
     } catch (e) {
       print("Reset Password Error: $e");
       EasyLoading.showError("Connection error");
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+  // متغيرات خاصة بـ Firebase Auth
+  String _verificationId = "";
+
+  // 1. دالة إرسال الكود للرقم
+  // Future<void> sendOtpToPhone(String phone) async {
+  //   try {
+  //     EasyLoading.show(status: 'Sending verification code...');
+  //
+  //     await FirebaseAuth.instance.verifyPhoneNumber(
+  //       phoneNumber: phone,
+  //       verificationCompleted: (PhoneAuthCredential credential) async {
+  //         // في حال التحقق التلقائي
+  //       },
+  //       verificationFailed: (FirebaseAuthException e) {
+  //         EasyLoading.showError("Error: ${e.message}");
+  //       },
+  //       codeSent: (String verificationId, int? resendToken) {
+  //         _verificationId = verificationId;
+  //         // تخزين الرقم في الـ Storage كما طلبتِ
+  //         storageService.write('temp_phone', phone);
+  //
+  //         EasyLoading.showSuccess("Code sent!");
+  //         // الانتقال لصفحة الـ OTP
+  //         Get.toNamed(AppRoutes.varification, arguments: {'phone': phone});
+  //       },
+  //       codeAutoRetrievalTimeout: (String verificationId) {},
+  //     );
+  //   } catch (e) {
+  //     EasyLoading.showError("Connection error");
+  //   } finally {
+  //     EasyLoading.dismiss();
+  //   }
+  // }
+// في ملف AuthController.dart
+
+// دالة إرسال الكود
+  Future<void> sendOtpToPhone(String phone) async {
+    try {
+      EasyLoading.show(status: 'Sending code...'); // تشغيل اللودينج
+
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phone,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await FirebaseAuth.instance.signInWithCredential(credential);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          EasyLoading.showError("Failed to send code");
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          _verificationId = verificationId;
+          storageService.write('temp_phone', phone);
+          EasyLoading.showSuccess("Code sent successfully");
+          Get.toNamed(AppRoutes.varification); // الانتقال لصفحة الكود
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          _verificationId = verificationId;
+        },
+      );
+    } catch (e) {
+      EasyLoading.showError("Failed to send code");
+    }
+  }
+  // 2. دالة التحقق من الكود ثم استدعاء الـ API الخاص بكِ
+  Future<void> verifyOtpAndSubmit(String smsCode, Map<String, dynamic> userData) async {
+    try {
+      EasyLoading.show(status: 'Verifying code...');
+
+      // 1. التحقق من الكود عبر Firebase
+      AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: smsCode,
+      );
+
+      // تسجيل الدخول في Firebase للتأكد من صحة الكود
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // 2. إذا نجح Firebase، نقوم بإنشاء الحساب في السيرفر الخاص بك
+      // نستخدم await للتأكد من انتهاء عملية التسجيل قبل الانتقال
+      await signup(
+        firstName: userData['first_name'] ?? "",
+        lastName: userData['last_name'] ?? "",
+        email: userData['email'] ?? "",
+        phone: storageService.read('temp_phone') ?? "",
+        password: userData['password'] ?? "",
+        passwordConfirmation: userData['password_confirmation'] ?? "",
+      );
+
+      // 3. الانتقال لصفحة الموقع بعد نجاح التسجيل
+      // استخدمنا offAllNamed لضمان عدم العودة لصفحة التحقق مرة أخرى
+      Get.offAllNamed(AppRoutes.location);
+
+      EasyLoading.showSuccess("Registration Successful!");
+
+    } catch (e) {
+      // طباعة الخطأ في الـ Console لمعرفة السبب الحقيقي لو فشل
+      print("Verification Error: $e");
+      EasyLoading.showError("Invalid OTP code or Server Error");
     } finally {
       EasyLoading.dismiss();
     }

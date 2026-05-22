@@ -1,17 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:store_app/screens/Auth/signup_screen.dart';
-import 'package:store_app/screens/Auth/widgets/text_form_field.dart';
-
+import 'package:store_app/routes/app_routes.dart';
+import 'package:store_app/views/Auth/signup_screen.dart';
+import 'package:store_app/views/Auth/widgets/text_form_field.dart';
+import '../../controllers/auth_controller.dart';
 import '../../core/theme/app_asset.dart';
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_theme.dart';
-import '../../widgets/store_elevated_btn.dart';
-import '../../widgets/store_text.dart';
-import '../store/home_screen.dart';
+import '../widgets/store_elevated_btn.dart';
+import 'package:get/get.dart';
+import '../widgets/store_text.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -24,6 +24,7 @@ class _LoginState extends State<Login> {
   final formKey = GlobalKey<FormState>();
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
+  final  authController = Get.find<AuthController>();
   @override
   void initState() {
     // TODO: implement initState
@@ -33,10 +34,11 @@ class _LoginState extends State<Login> {
 
   }
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
     return  ScreenUtilInit(
       designSize:Size(414, 896),
       child: Scaffold(
+        backgroundColor: Color(0xfffffff),
         body: Padding(
           padding: EdgeInsets.all(20).r,
           child: Column(
@@ -58,8 +60,7 @@ class _LoginState extends State<Login> {
                     children: [
                       StoreText(value: "Email", color: Color(0xff7C7C7C), fontWeight: FontWeight.w300, fontSize: 16.sp),
                       SizedBox(
-                        height: 70.h,
-                        width: 364.w,
+                        height: 80.h,                        width: 364.w,
                         child: StoreTextFormField(value: "Email",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -77,8 +78,7 @@ class _LoginState extends State<Login> {
                       ),
                       StoreText(value: "Password", color: Color(0xff7C7C7C), fontWeight: FontWeight.w300, fontSize: 16.sp),
                       SizedBox(
-                        height: 70.h,
-                        width: 364.w,
+                        height: 80.h,                        width: 364.w,
                         child: StoreTextFormField(value: "Password",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -100,25 +100,30 @@ class _LoginState extends State<Login> {
                       ),
                       Container(
                         alignment: Alignment.centerRight,
-                        child: StoreText(value: "Forget Password? ", color: Color(0xff181725), fontWeight:
-                        FontWeight.w300, fontSize: 13.sp,
-                          textAlign: TextAlign.end,),
+                        child: InkWell(
+                          onTap:() =>  Get.toNamed(AppRoutes.forgetPassword),
+                          child: StoreText(value: "Forget Password? ", color: Color(0xff181725), fontWeight:
+                          FontWeight.w300, fontSize: 13.sp,
+                            textAlign: TextAlign.end,),
+                        ),
                       ),
                     ],
                   )
               ),
               SizedBox(
-                height: 50.h,
+                height: 55.h,
                 width: 364.w,
                 child: StoreElevatedBtn(value: "Login",
                   color: AppTheme.btnColor,
                   borderRadius: BorderRadius.circular(12).r,
                   onPressed: () {
                     if(formKey.currentState!.validate()){
-                      print(emailController.text);
-                      print(passwordController.text);
+                      authController.login(
+                          email: emailController.text,
+                          password: passwordController.text
+                      );
                     }
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Home(),));
+                    // ApiService().login();
                   },),
               ),
               Center(

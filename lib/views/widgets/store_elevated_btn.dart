@@ -1,7 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
-import 'package:store_app/widgets/store_text.dart';
-import '../core/theme/app_color.dart';
+import 'package:store_app/views/widgets/store_text.dart';
+import '../../core/theme/app_color.dart';
 
 class StoreElevatedBtn extends StatelessWidget {
   final Color color;

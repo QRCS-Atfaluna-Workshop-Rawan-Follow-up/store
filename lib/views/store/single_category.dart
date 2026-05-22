@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_asset.dart';
-import 'package:store_app/screens/store/widgets/category_list_view.dart';
-import 'package:store_app/screens/store/widgets/store_list_view.dart';
-import '../../core/theme/app_color.dart';
-import '../../widgets/store_text.dart';
+import 'package:store_app/views/store/widgets/category_list_view.dart';
+import '../widgets/store_text.dart';
 import 'filter_screen.dart';
 
 class SingleCategory extends StatefulWidget {

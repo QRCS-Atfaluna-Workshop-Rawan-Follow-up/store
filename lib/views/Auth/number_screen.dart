@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_color.dart';
-import 'package:store_app/screens/Auth/varification_screen.dart';
-import 'package:store_app/widgets/store_text.dart';
+import 'package:store_app/views/Auth/varification_screen.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../widgets/store_text.dart';
 
 class Number extends StatefulWidget {
   const Number({super.key});

@@ -4,10 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store_app/core/theme/app_color.dart';
+import 'package:store_app/routes/app_routes.dart';
 
-import '../../widgets/store_elevated_btn.dart';
-import '../../widgets/store_text.dart';
-import '../Auth/singin_screen.dart';
+import 'package:get/get.dart';
+
+import '../widgets/store_elevated_btn.dart';
+import '../widgets/store_text.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -37,25 +39,26 @@ class _OnboardingState extends State<Onboarding> {
               right: 0,
               left: 0,
               child: Column(
-                spacing: 12.h,
+                spacing: 15.h,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset("${AppAsset.imageUrl}carrot_logo.svg",width: 38.w,
                     height:43.h,fit: BoxFit.cover,),
                   StoreText(color:AppColor.textColor ,fontWeight: FontWeight.w600,
-                    fontSize:24.sp ,value: "Welcome to our store"),
+                    fontSize:26.sp ,value: "Welcome to our store"),
                   StoreText(color: AppColor.textColor, fontWeight: FontWeight.w300,
-                      fontSize: 14.sp,
+                      fontSize: 16.sp,
                       value: "Ger your groceries in as fast as one hour"),
                   SizedBox(
-                    width: 300.w,
-                      height:50.h ,
+                    width: 364.w,
+                      height:60.h ,
                       child:
                   StoreElevatedBtn(value:'Get Started', color: AppColor.mainColor,
                     borderRadius: BorderRadius.circular(15).r, onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder:
-                        (context) => Signin(),));
+                      Get.toNamed(AppRoutes.signin);
+                    // Navigator.push(context, MaterialPageRoute(builder:
+                    //     (context) => Signin(),));
                     },)),
                 ],
               ),
