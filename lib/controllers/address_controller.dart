@@ -3,6 +3,7 @@ import 'package:flutter/material.dart'; // استخدمي material بدلاً م
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
+import 'package:store_app/core/network/api_contants.dart';
 import '../core/localization/storaged_services.dart';
 import '../data/models/adress_model.dart';
 
@@ -75,7 +76,7 @@ class AddressController extends GetxController {
       // 🎯 استخدام MultipartRequest لأن السيرفر يتوقع form-data
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("https://tullana.toldpath.com/api/customer/profile/address/add"),
+        Uri.parse(ApiConstants.addAddress),
       );
 
       // إضافة الـ Headers
@@ -134,7 +135,7 @@ class AddressController extends GetxController {
       // تأكدي من مسار الـ API الصحيح للتعديل
       var response = await http.put(
         Uri.parse(
-            "https://tullana.toldpath.com/api/customer/profile/address/update"),
+            ApiConstants.updateAddress),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -174,7 +175,7 @@ class AddressController extends GetxController {
       update(); // تحديث الواجهة لإظهار مؤشر التحميل
 
       final response = await http.get(
-        Uri.parse("https://tullana.toldpath.com/api/customer/profile/address/list"),
+        Uri.parse(ApiConstants.addressList),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token', // تأكدي من تعريف متغير الـ token لديكِ

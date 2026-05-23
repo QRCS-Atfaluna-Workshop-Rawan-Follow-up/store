@@ -30,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../core/localization/storaged_services.dart';
+import '../core/network/api_contants.dart';
 import '../data/models/cart_model.dart';
 
 class CartController extends GetxController {
@@ -86,7 +87,7 @@ class CartController extends GetxController {
     EasyLoading.show(status: 'Updating...');
     try {
       var response = await http.get(
-        Uri.parse("https://tullana.toldpath.com/api/customer/cart"),
+        Uri.parse(ApiConstants.getCart),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -122,7 +123,7 @@ class CartController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse("https://tullana.toldpath.com/api/customer/cart/add"),
+        Uri.parse(ApiConstants.addToCart),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -155,7 +156,7 @@ class CartController extends GetxController {
     EasyLoading.show(status: 'Updating...');
     try {
       final response = await http.put(
-        Uri.parse("https://tullana.toldpath.com/api/customer/cart/update"),
+        Uri.parse(ApiConstants.updateItemInCart),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -185,22 +186,25 @@ class CartController extends GetxController {
     } finally {
       update();
     }
-  }
-  void incrementQuantity(CartItem item) {
+  }void incrementQuantity(CartItem item) {
     int newQty = (item.quantity ?? 1) + 1;
-    fetchCart();
-    updateCartQuantity(item.id, newQty);
 
+    item.quantity = newQty;
+    update();
+
+    updateCartQuantity(item.id, newQty);
   }
 
   void decrementQuantity(CartItem item) {
     if ((item.quantity ?? 1) > 1) {
       int newQty = (item.quantity ?? 1) - 1;
+
+      item.quantity = newQty;
+      update();
+
       updateCartQuantity(item.id, newQty);
-      fetchCart();
     } else {
       EasyLoading.showInfo("Minimum quantity is 1");
-
     }
   }
 
@@ -211,7 +215,7 @@ class CartController extends GetxController {
 
     try {
       final response = await http.delete(
-        Uri.parse("https://tullana.toldpath.com/api/customer/cart/remove"),
+        Uri.parse(ApiConstants.removeItem),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -241,15 +245,6 @@ class CartController extends GetxController {
       update();
     }
   }
-
-
-
-
-
-
-
-
-
 
   // دالة مساعدة لحساب عدد المنتجات الكلي في السلة
   int get totalItemsCount => cartItems.length;

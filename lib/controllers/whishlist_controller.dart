@@ -176,6 +176,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:store_app/core/network/api_contants.dart';
 import 'cart_controller.dart';
 import '../core/localization/storaged_services.dart';
 import '../data/models/whishlist_model.dart';
@@ -202,7 +203,7 @@ class FavoriteController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse("https://tullana.toldpath.com/api/customer/favorites"),
+        Uri.parse(ApiConstants.getWishList),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -257,7 +258,7 @@ class FavoriteController extends GetxController {
       try {
         var request = http.Request(
             'DELETE',
-            Uri.parse("https://tullana.toldpath.com/api/customer/favorites/remove")
+            Uri.parse(ApiConstants.removeFromWishList)
         );
 
         request.headers.addAll({
@@ -291,7 +292,8 @@ class FavoriteController extends GetxController {
       // -----------------------------------------------------------
 
       // 1. تحديث محلي فوري وتحويل لون القلب للأحمر دون انتظار الشبكة
-      favoriteItems.add(FavoriteProduct(
+      favoriteItems.add(
+     FavoriteProduct(
         id: product.id,
         name: product.name,
         thumbnail: product.thumbnail,
@@ -303,7 +305,7 @@ class FavoriteController extends GetxController {
       EasyLoading.show(status: 'Adding to wishlist...');
       try {
         final response = await http.post(
-          Uri.parse("https://tullana.toldpath.com/api/customer/favorites/add"),
+          Uri.parse(ApiConstants.addToWishList),
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer $token',
@@ -340,7 +342,7 @@ class FavoriteController extends GetxController {
     EasyLoading.show(status: 'Adding to wishlist...');
     try {
       final response = await http.post(
-        Uri.parse("https://tullana.toldpath.com/api/customer/favorites/add"),
+        Uri.parse(ApiConstants.addToWishList),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -365,35 +367,36 @@ class FavoriteController extends GetxController {
   /// Legacy function kept for backward compatibility (Optional)
   Future<void> removeFromFavorites(int? productId) async {
     if (productId == null || token == null) return;
+
     EasyLoading.show(status: 'Removing...');
     try {
-      var request = http.Request(
-          'DELETE',
-          Uri.parse("https://tullana.toldpath.com/api/customer/favorites/remove")
+      // 🎯 استخدام http.delete المباشرة مع تمرير الـ body والـ headers الصحيحة
+      final response = await http.delete(
+        Uri.parse(ApiConstants.removeFromWishList),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json', // ✅ تصحيح الكلمة ليفهم السيرفر أن القادم JSON raw
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'product_id': [productId], // ✅ إبقاء الأقواس [ ] لأن السيرفر يطلبها كمصفوفة بداخل الـ Postman
+        }),
       );
-      request.headers.addAll({
-        'Accept': 'application/json',
-        'Content-Type': 'package:json',
-        'Authorization': 'Bearer $token',
-      });
-      request.body = json.encode({
-        'product_id': [productId],
-      });
 
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
       var data = json.decode(response.body);
 
       if (response.statusCode == 200 && data['status'] == true) {
+        // ✅ حذف العنصر محلياً لتحديث الواجهة فوراً للمستخدم
         favoriteItems.removeWhere((item) => item.id == productId);
         EasyLoading.showSuccess(data['message'] ?? "Removed successfully");
       } else {
         EasyLoading.showError(data['message'] ?? "Failed to remove");
       }
     } catch (e) {
+      print("Error Details: $e"); // لطباعة تفاصيل الخطأ الفعلي بداخل الـ Console عندكِ أثناء الفحص
       EasyLoading.showError("Connection error");
     } finally {
-      update();
+      update(); // تحديث الـ GetBuilder لتنعكس التغييرات فوراً على الـ UI
     }
   }
   Future<void> addAllWishlistToCart(List<dynamic> wishlistItems) async {

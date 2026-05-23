@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart'; // تأكدي من استيرادها
+import 'package:store_app/core/network/api_contants.dart';
 import 'package:store_app/routes/app_routes.dart';
 import '../core/localization/storaged_services.dart';
 import 'otp_model.dart';
@@ -16,7 +17,7 @@ class AuthController extends GetxController {
         maskType: EasyLoadingMaskType.black,);
 
       var response = await http.post(
-        Uri.parse("https://tullana.toldpath.com/api/customer/auth/login"),
+        Uri.parse(ApiConstants.login),
         headers: {'Accept': 'application/json'},
         body: {'email': email, "password": password},
       );
@@ -47,13 +48,14 @@ class AuthController extends GetxController {
   }
   Future signup({required String firstName, required String lastName, required String email,
     required String phone, required String password, required String passwordConfirmation,
-  }) async {
+  }) async
+  {
     try {
       EasyLoading.show(status: 'please wait create account now ..',
           maskType: EasyLoadingMaskType.black);
 
       var response = await http.post(
-          Uri.parse("https://tullana.toldpath.com/api/customer/auth/register"),
+          Uri.parse(ApiConstants.signup),
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -114,7 +116,7 @@ class AuthController extends GetxController {
         status: 'Sending code...');
     try {
       final response = await http.post(
-        Uri.parse("https://tullana.toldpath.com/api/customer/auth/forgot-password"),
+        Uri.parse(ApiConstants.forgetPassword),
         body: {'email': email
         },
       );
@@ -143,7 +145,7 @@ class AuthController extends GetxController {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("https://tullana.toldpath.com/api/customer/auth/verify-otp"),
+        Uri.parse(ApiConstants.varifyOtp),
       );
       request.fields.addAll({
         'email': email,
@@ -175,12 +177,13 @@ class AuthController extends GetxController {
     required String otpToken,
     required String newPassword,
     required String confirmPassword,
-  }) async {
+  }) async
+  {
     EasyLoading.show(status: 'Updating password...');
 
     try {
       final response = await http.put(
-        Uri.parse("https://tullana.toldpath.com/api/customer/auth/reset-password"),
+        Uri.parse(ApiConstants.resetPassword),
 
         headers: {
           'Content-Type': 'application/json',
@@ -216,38 +219,6 @@ class AuthController extends GetxController {
   }
   // متغيرات خاصة بـ Firebase Auth
   String _verificationId = "";
-
-  // 1. دالة إرسال الكود للرقم
-  // Future<void> sendOtpToPhone(String phone) async {
-  //   try {
-  //     EasyLoading.show(status: 'Sending verification code...');
-  //
-  //     await FirebaseAuth.instance.verifyPhoneNumber(
-  //       phoneNumber: phone,
-  //       verificationCompleted: (PhoneAuthCredential credential) async {
-  //         // في حال التحقق التلقائي
-  //       },
-  //       verificationFailed: (FirebaseAuthException e) {
-  //         EasyLoading.showError("Error: ${e.message}");
-  //       },
-  //       codeSent: (String verificationId, int? resendToken) {
-  //         _verificationId = verificationId;
-  //         // تخزين الرقم في الـ Storage كما طلبتِ
-  //         storageService.write('temp_phone', phone);
-  //
-  //         EasyLoading.showSuccess("Code sent!");
-  //         // الانتقال لصفحة الـ OTP
-  //         Get.toNamed(AppRoutes.varification, arguments: {'phone': phone});
-  //       },
-  //       codeAutoRetrievalTimeout: (String verificationId) {},
-  //     );
-  //   } catch (e) {
-  //     EasyLoading.showError("Connection error");
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
-// في ملف AuthController.dart
 
 // دالة إرسال الكود
   Future<void> sendOtpToPhone(String phone) async {

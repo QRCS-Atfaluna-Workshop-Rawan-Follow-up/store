@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:store_app/core/network/api_contants.dart';
 
 import '../../controllers/category-controller.dart';
 
@@ -12,7 +13,7 @@ class ApiService {
     try {
       final response = await
       http.get(
-          Uri.parse("https://tullana.toldpath.com/api/customer/categories/products/135"));
+          Uri.parse(ApiConstants.getProductsByCategory));
 
       if (response.statusCode == 200) {
         // تحويل نص الـ JSON إلى Map ثم إلى Model

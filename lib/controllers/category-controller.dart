@@ -61,40 +61,6 @@ class CategoryController extends GetxController {
     }
   }
 
-  // دالة مساعدة للتأكد من الرابط قبل تمريره للـ UI
-//   String getSafeImageUrl(int index) {
-//     String? url = categoryModel?.data?[index].thumbnail;
-//     if (url == null ||
-//         url.isEmpty ||
-//         url == "null" ||
-//         !url.startsWith("http")) {
-//       return ""; // إعادة نص فارغ ليتم معالجته في الواجهة
-//     }
-//     return url;
-//   }
-//   String getSafeImageUrl(int index) {
-//     String? url = categoryModel?.data?[index].thumbnail;
-//
-//     // إذا كان حقل الـ thumbnail فارغاً، نحاول جلب أول صورة من مصفوفة الـ images
-//     if (url == null || url.isEmpty || url == "null") {
-//       if (categoryModel?.data?[index].images != null && categoryModel!.data![index].images!.isNotEmpty) {
-//         url = categoryModel!.data![index].images![0];
-//       }
-//     }
-//
-//     if (url == null || url.isEmpty || url == "null") {
-//       return "";
-//     }
-//
-//     // 💡 الحل السحري: إزالة الأقواس المربعة [ ] من البداية والنهاية إن وجدت
-//     url = url.replaceAll('[', '').replaceAll(']', '').trim();
-//
-//     if (!url.startsWith("http")) {
-//       return "";
-//     }
-//
-//     return url;
-//   }
   // دالة تنظيف روابط الصور من الأقواس المربعة والفراغات
   String getCleanImageUrl(String? url) {
     if (url == null || url.isEmpty || url == "null") return "";

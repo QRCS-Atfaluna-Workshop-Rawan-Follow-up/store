@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:store_app/core/network/api_contants.dart';
 import '../core/localization/storaged_services.dart';
 import '../data/models/profile_model.dart';
 
@@ -24,7 +26,7 @@ class ProfileController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse("https://tullana.toldpath.com/api/customer/profile/info"),
+        Uri.parse(ApiConstants.getProfileData),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -62,7 +64,7 @@ class ProfileController extends GetxController {
     EasyLoading.show(status: 'جاري التحديث...');
     try {
       final response = await http.post(
-        Uri.parse("https://tullana.toldpath.com/api/customer/profile/update-profile"), // تأكدي من مسار الرابط من الـ API
+        Uri.parse(ApiConstants.updateProfile), // تأكدي من مسار الرابط من الـ API
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',

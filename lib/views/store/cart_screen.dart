@@ -68,20 +68,23 @@ class _CartState extends State<Cart> {
                       itemBuilder: (context, index) {
                         final item = controller.cartItems[index];
 
-                        // 🟢 1. حساب السعر الإجمالي للمنتج الحالي (السعر * الكمية)
+                        // 1. حساب السعر الرقمي الإجمالي للمنتج الحالي (السعر * الكمية)
                         final double unitPrice = double.tryParse(item.product?.unitPrice.toString() ?? '0') ?? 0.0;
                         final int quantity = item.quantity ?? 1;
                         final double totalPriceForItem = unitPrice * quantity;
+
+                        // 2. تحويل الرقم لنص وقص الأصفار الزائدة بالـ RegExp
+                        String priceToShow = totalPriceForItem.toStringAsFixed(2).replaceAll(RegExp(r'\.00$|(?<=\.\d)0$'), '');
 
                         return Container(
                           width: double.infinity,
                           padding: EdgeInsets.all(10).r,
                           height: 150.h,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             border: Border.symmetric(
                               horizontal: BorderSide(
-                                width: 1.w,
-                                color: const Color(0xffE2E2E2),
+                                width: 1,
+                                color: Color(0xffE2E2E2),
                               ),
                             ),
                           ),
@@ -125,17 +128,17 @@ class _CartState extends State<Cart> {
                                         height: 45.5.h,
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: const Color(0xffE2E2E2), // جعلت الحدود أفتح لتطابق التصميم
+                                            color: const Color(0xffE2E2E2),
                                             width: 1.w,
                                           ),
-                                          borderRadius: BorderRadius.circular(17).r, // زيادة الانحناء ليصبح دائرياً كالتصميم
+                                          borderRadius: BorderRadius.circular(17).r,
                                         ),
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
                                           onPressed: () {
                                             controller.decrementQuantity(item);
                                           },
-                                          icon: const Icon(Icons.remove, color: Color(0xffB3B3B3)), // أيقونة ناقص أفضل من minimize
+                                          icon: const Icon(Icons.remove, color: Color(0xffB3B3B3)),
                                         ),
                                       ),
                                       Text(
@@ -150,7 +153,7 @@ class _CartState extends State<Cart> {
                                         height: 45.5.h,
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            color:  Color(0xffE2E2E2),
+                                            color: const Color(0xffE2E2E2),
                                             width: 1.w,
                                           ),
                                           borderRadius: BorderRadius.circular(17).r,
@@ -179,9 +182,9 @@ class _CartState extends State<Cart> {
                                   ),
                                   SizedBox(height: 30.h),
 
-                                  // 🟢 2. عرض السعر الإجمالي المحدث للمنتج هنا
+                                  // عرض القيمة النظيفة الخالية من الأصفار المزعجة هنا
                                   StoreText(
-                                    value: "\$${totalPriceForItem.toStringAsFixed(2)}",
+                                    value: "\$$priceToShow",
                                     color: const Color(0xff121212),
                                     fontWeight: FontWeight.w600,
                                     fontSize: 18.sp,
@@ -193,6 +196,38 @@ class _CartState extends State<Cart> {
                         );
                       },
                     ),
+
+                    // 🟢 الجزء الجديد: عرض السعر الإجمالي الكلي من السيرفر (Total Price)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          StoreText(
+                            value: "Total Price",
+                            color: const Color(0xff181725),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.sp,
+                          ),
+                          Builder(
+                            builder: (context) {
+                              // قراءة الـ finalTotalCost وتحويله برمجياً لـ double احتياطاً لتنظيف الأصفار
+                              final double finalCost = double.tryParse(controller.finalTotalCost.toString()) ?? 0.0;
+                              String formattedTotal = finalCost.toStringAsFixed(2).replaceAll(RegExp(r'\.00$|(?<=\.\d)0$'), '');
+
+                              return StoreText(
+                                value: "\$$formattedTotal",
+                                color: const Color(0xff181725),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.sp,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // زر الانتقال إلى شاشة الدفع والـ Bottom Sheet
                     SizedBox(
                       height: 67.h,
                       width: 364.w,
@@ -208,7 +243,8 @@ class _CartState extends State<Cart> {
                           );
                         },
                       ),
-                    )
+                    ),
+                    SizedBox(height: 10.h), // مسافة أمان إضافية بالأسفل
                   ],
                 ),
               ),

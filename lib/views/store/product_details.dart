@@ -344,13 +344,16 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     // 💡 إذا دخل المستخدم الصفحة وكانت البيانات مفقودة، نعرض واجهة حماية بدلاً من كراش باللون الأحمر
     if (product == null) {
-      return Scaffold(
-        appBar: AppBar(backgroundColor: Colors.white, elevation: 0),
-        backgroundColor: Colors.white,
-        body: const Center(
-          child: Text(
-            "Product data is unavailable.",
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+      return ScreenUtilInit(
+        designSize: Size(414, 896),
+        child: Scaffold(
+          appBar: AppBar(backgroundColor: Colors.white, elevation: 0),
+          backgroundColor: Colors.white,
+          body: const Center(
+            child: Text(
+              "Product data is unavailable.",
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       );

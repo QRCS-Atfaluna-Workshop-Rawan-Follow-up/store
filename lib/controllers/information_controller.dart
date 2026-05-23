@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:store_app/core/localization/storaged_services.dart';
+import 'package:store_app/core/network/api_contants.dart';
 class InformationController extends GetxController {
   // متغيرات صفحة من نحن
   String aboutUsContent = "";
@@ -23,7 +24,7 @@ class InformationController extends GetxController {
       isAboutLoading = true;
       update();
       final response = await http.get(
-          Uri.parse("https://tullana.toldpath.com/api/customer/profile/help-center/about-us"));
+          Uri.parse(ApiConstants.aboutUs));
       if (response.statusCode == 200) {
         aboutUsContent = json.decode(response.body)['data'] ?? "";
       }
@@ -40,7 +41,7 @@ class InformationController extends GetxController {
     try {
       isTermsLoading = true;
       update();
-      final response = await http.get(Uri.parse("https://tullana.toldpath.com/api/customer/profile/help-center/terms-conditions"));
+      final response = await http.get(Uri.parse(ApiConstants.terms));
       if (response.statusCode == 200) {
         termsContent = json.decode(response.body)['data'] ?? "";
       }
@@ -57,7 +58,7 @@ class InformationController extends GetxController {
     try {
       isPrivacyLoading = true;
       update();
-      final response = await http.get(Uri.parse("https://tullana.toldpath.com/api/customer/profile/help-center/privacy-policy"));
+      final response = await http.get(Uri.parse(ApiConstants.privacy));
       if (response.statusCode == 200) {
         privacyContent = json.decode(response.body)['data'] ?? "";
       }
@@ -74,7 +75,7 @@ class InformationController extends GetxController {
       EasyLoading.show(status: 'sending your message...');
 
       final response = await http.post(
-        Uri.parse("https://tullana.toldpath.com/api/customer/technical-support/create"),
+        Uri.parse(ApiConstants.support),
         body: {
           "issue_type": subject,
           "description": description,
