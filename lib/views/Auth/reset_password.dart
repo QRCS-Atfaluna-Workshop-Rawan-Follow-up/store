@@ -4,6 +4,7 @@ import 'package:store_app/core/theme/app_asset.dart';
 import 'package:store_app/core/theme/app_color.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:store_app/core/utils/app_validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../widgets/store_text.dart';
 class ResetPassword extends StatefulWidget{
@@ -109,20 +110,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                               ),
                             ),
                           ),
-                          validator: (value) {
-                            if(value == null || value.isEmpty){
-                              return "Is required";
-                            }
-                            else if(value.length<8){
-                              return "Password is weak";
-                            }
-                            else if (!RegExp(r'[a-zA-Z0-9]').hasMatch(value)){
-                              return "Must contains uppercase and lowercase characters";
-                            }
-                            else{
-                              return null;
-                            }
-                          },
+                          validator: (value) => AppValidator.validatePassword(value),
                         ),
                       ),
                       SizedBox(
@@ -132,7 +120,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                           obscuringCharacter: '*',
                           obscureText: true,
                           decoration: InputDecoration(
-                            hint: Text("Password",style: TextStyle(color: Color(0xff7C8BA0),fontSize: 16.sp),),
+                            hint: Text(" Confirm Password",style: TextStyle(color: Color(0xff7C8BA0),fontSize: 16.sp),),
                             suffixIcon: Icon(Icons.visibility_off_outlined,color: Color(0xff7C8BA0),),
                             filled: true,
                             fillColor: Color(0xffF5F9FE),
@@ -153,17 +141,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                                 color: AppColor.mainColor,                              ),
                             ),
                           ),
-                          validator: (value) {
-                            if(value == null || value.isEmpty){
-                              return "Is required";
-                            }
-                            else if(value != passwordController.text){
-                              return "Password doesn't match";
-                            }
-                            else{
-                              return null;
-                            }
-                          },
+                          validator: (value)=>AppValidator.validateConfirmPassword(value, confirmPasswordController.text),
                         ),
                       ),
                       SizedBox(height: 5.h,),

@@ -2,18 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:store_app/controllers/network_controller.dart';
 import 'package:store_app/core/localization/language_controller.dart';
 import 'package:store_app/routes/app_pages.dart';
 import 'package:store_app/routes/app_routes.dart';
-import 'package:store_app/views/sidebarItems/about_us.dart';
-import 'package:store_app/views/sidebarItems/privcy.dart';
-import 'package:store_app/views/sidebarItems/support_screen.dart';
-import 'package:store_app/views/sidebarItems/terms_screen.dart';
-import 'package:store_app/views/store/home_screen.dart';
 import 'controllers/address_controller.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/cart_controller.dart';
-import 'controllers/category-controller.dart';
+import 'controllers/category_controller.dart';
 import 'controllers/information_controller.dart';
 import 'controllers/profile_controller.dart';
 import 'controllers/whishlist_controller.dart';
@@ -65,13 +61,16 @@ class MyApp extends StatelessWidget {
       designSize: Size(414,896),
       child: GetMaterialApp(
         getPages:AppPages.pages,
-        // initialRoute:startRoute,
+        initialRoute:startRoute,
         translations: AppTranslations(),
         locale: languageController.currentLocale.value,
         fallbackLocale:Locale("ar","SA") ,
         debugShowCheckedModeBanner: false,
-        home: Home(),
+        // home: Home(),
         builder: EasyLoading.init(),
+        initialBinding: BindingsBuilder((){
+          Get.put(NetworkController(),permanent: true);
+        }),
       ),
     );
   }

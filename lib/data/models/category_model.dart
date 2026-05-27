@@ -1,162 +1,4 @@
-// class MainCategoryResponse {
-//   bool? status;
-//   Category? category;
-//   List<ProductData>? data;
-//   Pagination? pagination;
-//   AppliedFilters? appliedFilters;
-//
-//   MainCategoryResponse({
-//     this.status,
-//     this.category,
-//     this.data,
-//     this.pagination,
-//     this.appliedFilters,
-//   });
-//
-//   MainCategoryResponse.fromJson(Map<String, dynamic> json) {
-//     status = json['status'];
-//     category = json['category'] != null ? Category.fromJson(json['category']) : null;
-//     if (json['data'] != null) {
-//       data = <ProductData>[];
-//       json['data'].forEach((v) {
-//         data!.add(ProductData.fromJson(v));
-//       });
-//     }
-//     pagination = json['pagination'] != null ? Pagination.fromJson(json['pagination']) : null;
-//     appliedFilters = json['applied_filters'] != null ? AppliedFilters.fromJson(json['applied_filters']) : null;
-//   }
-//
-//   Object? operator [](int other) {}
-// }
-//
-// class Category {
-//   int? id;
-//   String? name;
-//   String? slug;
-//   String? image;
-//
-//   Category({this.id, this.name, this.slug, this.image});
-//
-//   Category.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     name = json['name'];
-//     slug = json['slug'];
-//     image = json['image'];
-//   }
-// }
-//
-// // class ProductData {
-// //   int? id;
-// //   String? name;
-// //   String? thumbnail;
-// //   List<String>? images;
-// //   double? finalUnitPrice;
-// //   bool? isFavorite;
-// //   // أضفت باقي الحقول الضرورية فقط للاختصار، يمكنك إضافة البقية بنفس النمط
-// //
-// //   ProductData({this.id, this.name, this.thumbnail, this.images, this.finalUnitPrice, this.isFavorite});
-// //
-// //   ProductData.fromJson(Map<String, dynamic> json) {
-// //     id = json['id'];
-// //     name = json['name'];
-// //     isFavorite = json['is_favorite'];
-// //     finalUnitPrice = json['final_unit_price']?.toDouble();
-// //
-// //     // حماية ضد خطأ file:///null
-// //     var thumb = json['thumbnail'];
-// //     thumbnail = (thumb == "null" || thumb == null) ? "" : thumb;
-// //
-// //     if (json['images'] != null) {
-// //       images = json['images'].cast<String>();
-// //     }
-// //   }
-// // }
-// class ProductData {
-//   int? id;
-//   String? code;
-//   String? name;
-//   String? slug;
-//   String? shortDescription;
-//   String? details; // هذا هو الحقل الذي تحتاجه للتفاصيل
-//   String? shop;
-//   String? unit;
-//   double? finalUnitPrice;
-//
-//   String? thumbnail;
-//   List<String>? images;
-//   bool? isFavorite;
-//
-//   ProductData({
-//     this.id,
-//     this.code,
-//     this.name,
-//     this.slug,
-//     this.shortDescription,
-//     this.details,
-//     this.shop,
-//     this.finalUnitPrice,
-//     this.thumbnail,
-//     this.images,
-//     this.unit,
-//     this.isFavorite,
-//
-//   });
-//
-//   ProductData.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     code = json['code'];
-//     name = json['name'];
-//     slug = json['slug'];
-//     shortDescription = json['short_description'];
-//     details = json['details']; // تم التأكد من إضافته هنا
-//     shop = json['shop'];
-//     unit = json['unit'];
-//     isFavorite = json['is_favorite'];
-//
-//     // معالجة السعر لضمان عدم حدوث خطأ double/int
-//     finalUnitPrice = json['final_unit_price']?.toDouble();
-//
-//     // حماية ضد خطأ الصورة (null)
-//     var thumb = json['thumbnail'];
-//     thumbnail = (thumb == "null" || thumb == null) ? "" : thumb;
-//
-//     if (json['images'] != null) {
-//       images = json['images'].cast<String>();
-//     }
-//   }
-//
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = <String, dynamic>{};
-//     data['id'] = id;
-//     data['name'] = name;
-//     data['details'] = details; // التأكد من وجوده في التخزين أيضاً
-//     data['short_description'] = shortDescription;
-//     data['final_unit_price'] = finalUnitPrice;
-//     data['thumbnail'] = thumbnail;
-//     data['unit'] = unit;
-//     data['images'] = images;
-//     return data;
-//   }
-// }
-// // كلاسات مساعدة معدلة
-// class Pagination {
-//   int? total;
-//   int? perPage;
-//   int? currentPage;
-//
-//   Pagination.fromJson(Map<String, dynamic> json) {
-//     total = json['total'];
-//     perPage = json['per_page'];
-//     currentPage = json['current_page'];
-//   }
-// }
-//
-// class AppliedFilters {
-//   String? singleCategoryId;
-//   AppliedFilters.fromJson(Map<String, dynamic> json) {
-//     singleCategoryId = json['single_category_id'];
-//   }
-// }
+
 class ProductModel {
   int? id;
   String? name;
@@ -223,7 +65,27 @@ class ProductModel {
     }
   }
 }
+class Category {
+  int? id;
 
+  String? name;
+
+  String? slug;
+
+  String? image;
+
+  Category({this.id, this.name, this.slug, this.image});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+
+    name = json['name'];
+
+    slug = json['slug'];
+
+    image = json['image'];
+  }
+}
 class Brand {
   int? id;
   String? name;
@@ -233,5 +95,200 @@ class Brand {
   Brand.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+  }
+}
+class MainCategoryResponse {
+  bool? status;
+
+  Category? category;
+
+  List<ProductData>? data;
+
+  Pagination? pagination;
+
+  AppliedFilters? appliedFilters;
+
+  MainCategoryResponse({
+    this.status,
+
+    this.category,
+
+    this.data,
+
+    this.pagination,
+
+    this.appliedFilters,
+  });
+
+  MainCategoryResponse.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+
+    category = json['category'] != null
+        ? Category.fromJson(json['category'])
+        : null;
+
+    if (json['data'] != null) {
+      data = <ProductData>[];
+
+      json['data'].forEach((v) {
+        data!.add(ProductData.fromJson(v));
+      });
+    }
+
+    pagination = json['pagination'] != null
+        ? Pagination.fromJson(json['pagination'])
+        : null;
+
+    appliedFilters = json['applied_filters'] != null
+        ? AppliedFilters.fromJson(json['applied_filters'])
+        : null;
+  }
+
+  Object? operator [](int other) {}
+}
+class ProductData {
+  int? id;
+
+  String? code;
+
+  String? name;
+
+  String? slug;
+
+  String? shortDescription;
+
+  String? details; // هذا هو الحقل الذي تحتاجه للتفاصيل
+
+  String? shop;
+
+  String? unit;
+
+  double? finalUnitPrice;
+
+  String? thumbnail;
+
+  List<String>? images;
+
+  bool? isFavorite;
+
+  ProductData({
+    this.id,
+
+    this.code,
+
+    this.name,
+
+    this.slug,
+
+    this.shortDescription,
+
+    this.details,
+
+    this.shop,
+
+    this.finalUnitPrice,
+
+    this.thumbnail,
+
+    this.images,
+
+    this.unit,
+
+    this.isFavorite,
+  });
+
+  ProductData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+
+    code = json['code'];
+
+    name = json['name'];
+
+    slug = json['slug'];
+
+    shortDescription = json['short_description'];
+
+    details = json['details']; // تم التأكد من إضافته هنا
+
+    shop = json['shop'];
+
+    unit = json['unit'];
+
+    isFavorite = json['is_favorite'];
+
+    // معالجة السعر لضمان عدم حدوث خطأ double/int
+
+    finalUnitPrice = json['final_unit_price']?.toDouble();
+
+    // حماية ضد خطأ الصورة (null)
+
+    var thumb = json['thumbnail'];
+
+    thumbnail = (thumb == "null" || thumb == null) ? "" : thumb;
+
+    if (json['images'] != null) {
+      images = json['images'].cast<String>();
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+
+    data['id'] = id;
+
+    data['name'] = name;
+
+    data['details'] = details; // التأكد من وجوده في التخزين أيضاً
+
+    data['short_description'] = shortDescription;
+
+    data['final_unit_price'] = finalUnitPrice;
+
+    data['thumbnail'] = thumbnail;
+
+    data['unit'] = unit;
+
+    data['images'] = images;
+
+    return data;
+  }
+}
+
+class Pagination {
+  int? total;
+
+  int? perPage;
+
+  int? currentPage;
+
+  Pagination.fromJson(Map<String, dynamic> json) {
+    total = json['total'];
+
+    perPage = json['per_page'];
+
+    currentPage = json['current_page'];
+  }
+}
+
+class AppliedFilters {
+  String? singleCategoryId;
+
+  AppliedFilters.fromJson(Map<String, dynamic> json) {
+    singleCategoryId = json['single_category_id'];
+  }
+  List<ProductData> firstSectionProducts = [];
+  List<ProductData> secondSectionProducts = [];
+
+  void splitProducts(List<ProductData> allProducts) {
+    if (allProducts.length >= 4) {
+      // نأخذ أول منتجين للقسم الأول
+      firstSectionProducts = allProducts.sublist(0, 2);
+      // نأخذ المنتجين الثالث والرابع للقسم الثاني
+      secondSectionProducts = allProducts.sublist(2, 4);
+    } else {
+      // في حال كان العدد أقل من 4، نضع كل المنتجات في القسم الأول
+      firstSectionProducts = allProducts;
+      secondSectionProducts = [];
+    }
   }
 }

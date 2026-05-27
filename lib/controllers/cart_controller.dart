@@ -30,7 +30,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../core/localization/storaged_services.dart';
-import '../core/network/api_contants.dart';
+import '../core/constant/api_contants.dart';
 import '../data/models/cart_model.dart';
 
 class CartController extends GetxController {

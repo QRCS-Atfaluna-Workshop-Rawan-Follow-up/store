@@ -4,6 +4,7 @@ import 'package:store_app/controllers/auth_controller.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_color.dart';
+import 'package:store_app/core/utils/app_validator.dart';
 import 'package:store_app/views/Auth/widgets/socail_media_container.dart';
 import 'package:get/get.dart';
 import 'package:country_picker/country_picker.dart';
@@ -124,25 +125,12 @@ class _SigninState extends State<Signin> {
                                       // إذا كان الرقم يبدأ بـ 0، نقوم بحذف الصفر وإضافة كود الدولة
                                       String formattedNumber = value.startsWith('0') ? value.substring(1) : value;
                                       String fullPhone = "+${selectedCountry.phoneCode}$formattedNumber";
-
                                       authController.sendOtpToPhone(fullPhone);
                                       FocusScope.of(context).unfocus();
                                     }
                                   },
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "Please enter phone number";
-                                      }
-
-                                      if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                                        return "Enter valid phone number";
-                                      }
-                                      return null;
-                                    },
-
-                                  onTap: () {
-
-                                  },
+                                    validator: (value) => AppValidator.validatePhoneNumber(value),
+                                  onTap: () {},
                                 ),
                               ),
                             ),

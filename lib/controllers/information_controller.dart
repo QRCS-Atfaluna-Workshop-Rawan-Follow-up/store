@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:store_app/core/localization/storaged_services.dart';
-import 'package:store_app/core/network/api_contants.dart';
+import 'package:store_app/core/constant/api_contants.dart';
 class InformationController extends GetxController {
   // متغيرات صفحة من نحن
   String aboutUsContent = "";

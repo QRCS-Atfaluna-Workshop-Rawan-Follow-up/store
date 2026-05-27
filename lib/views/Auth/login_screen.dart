@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:store_app/core/utils/app_validator.dart';
 import 'package:store_app/routes/app_routes.dart';
 import 'package:store_app/views/Auth/signup_screen.dart';
 import 'package:store_app/views/Auth/widgets/text_form_field.dart';
@@ -62,16 +63,7 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 80.h,                        width: 364.w,
                         child: StoreTextFormField(value: "Email",
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Is required";
-                            } else if (!RegExp(
-                              r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
-                            ).hasMatch(value) && !RegExp(r'^\+?\d{9,15}$').hasMatch(value)) {
-                              return "Please Enter the correct Email ";
-                            }
-                            return null;
-                          },
+                          validator: (value) => AppValidator.validateEmail(value),
                           Controller: emailController,
 
                         ),
@@ -80,19 +72,7 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 80.h,                        width: 364.w,
                         child: StoreTextFormField(value: "Password",
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Is required";
-                            } else if (value.length < 8) {
-                              return "Password is weak";
-                            } else if (!RegExp(
-                              r'[a-zA-Z0-9]',
-                            ).hasMatch(value)) {
-                              return "Must contains uppercase and lowercase characters";
-                            } else {
-                              return null;
-                            }
-                          },
+                          validator: (value) => AppValidator.validatePassword(value),
                           obscureText: true,
                           obscuringCharacter: '*',
                           Controller: passwordController,

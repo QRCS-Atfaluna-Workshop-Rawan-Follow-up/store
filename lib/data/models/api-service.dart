@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:store_app/core/network/api_contants.dart';
+import 'package:store_app/core/constant/api_contants.dart';
 
-import '../../controllers/category-controller.dart';
+import '../../controllers/category_controller.dart';
+import 'category_model.dart';
 
 
 class ApiService {

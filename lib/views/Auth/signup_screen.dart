@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:store_app/core/theme/app_color.dart';
 import 'package:store_app/core/theme/app_theme.dart';
+import 'package:store_app/core/utils/app_validator.dart';
 import 'package:store_app/views/Auth/widgets/text_form_field.dart';
 import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
@@ -69,15 +70,7 @@ class _SignupState extends State<Signup> {
                       height: 80.h,
                       width: 364.w,
                       child: StoreTextFormField(value: "Username",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Is required";
-                          } else if (!RegExp(r'^[a-zA-Z]').hasMatch(value)) {
-                            return "Name must contain letters";
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: (value) => AppValidator.validateUserName(value),
                         Controller: usernameController,
                       ),
                     ),
@@ -86,39 +79,16 @@ class _SignupState extends State<Signup> {
                       height: 80.h,
                       width: 364.w,
                       child: StoreTextFormField(value: "Email",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Is required";
-                          } else if (!RegExp(
-                            r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
-                          ).hasMatch(value) && !RegExp(r'^\+?\d{9,15}$').hasMatch(value)) {
-                            return "Please Enter the correct Email ";
-                          }
-                          return null;
-                        },
+                        validator: (value) => AppValidator.validateEmail(value),
                         Controller: emailController,
-            
                       ),
                     ),
                     StoreText(value: "Password", color: Color(0xff7C7C7C), fontWeight: FontWeight.w300, fontSize: 16.sp),
-            
                     SizedBox(
                       height: 80.h,
                       width: 364.w,
                       child: StoreTextFormField(value: "Password",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Is required";
-                          } else if (value.length < 8) {
-                            return "Password is weak";
-                          } else if (!RegExp(
-                            r'[a-zA-Z0-9]',
-                          ).hasMatch(value)) {
-                            return "Must contains uppercase and lowercase characters";
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: (value) =>AppValidator.validatePassword(value),
                         obscureText: true,
                         obscuringCharacter: '*',
                         Controller: passwordController,
@@ -130,18 +100,7 @@ class _SignupState extends State<Signup> {
                       height: 80.h,
                       width: 364.w,
                       child: StoreTextFormField(value: "Confirm Password",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Is required";
-                          }
-                          else if (value != passwordController.text) {
-                            return "Password doesn't match";
-                          }
-                          else {
-                            return null;
-                          }
-                          
-                        },
+                        validator: (value) => AppValidator.validateConfirmPassword(value, confirmPasswordController.text),
                         obscureText: true,
                         obscuringCharacter: '*',
                         Controller: confirmPasswordController,

@@ -112,6 +112,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:store_app/core/utils/app_validator.dart';
 import 'package:store_app/views/Auth/widgets/text_form_field.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../controllers/auth_controller.dart';
@@ -200,14 +201,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     SizedBox(height: 10.h),
                     StoreTextFormField(
                       value: "Email",
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Is required";
-                        } else if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                          return "Please Enter a correct Email";
-                        }
-                        return null;
-                      },
+                      validator: (value)=> AppValidator.validateEmail(value),
                       Controller: emailController,
                     ),
                   ],

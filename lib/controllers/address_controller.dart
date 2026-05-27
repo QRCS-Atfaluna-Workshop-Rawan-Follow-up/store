@@ -3,7 +3,7 @@ import 'package:flutter/material.dart'; // استخدمي material بدلاً م
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
-import 'package:store_app/core/network/api_contants.dart';
+import 'package:store_app/core/constant/api_contants.dart';
 import '../core/localization/storaged_services.dart';
 import '../data/models/adress_model.dart';
 

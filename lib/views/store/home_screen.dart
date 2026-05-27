@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:store_app/controllers/category_controller.dart';
 import 'package:store_app/core/theme/app_asset.dart';
 import 'package:store_app/core/theme/app_color.dart';
 import 'package:store_app/core/theme/app_theme.dart';
@@ -35,6 +36,7 @@ class _HomeState extends State<Home> {
   late final TextEditingController searchController;
   final storage = Get.find<StorageService>();
   final homeController = Get.put(HomeController());
+  final categoryController = Get.find<CategoryController>();
 
   @override
   void initState() {
@@ -84,45 +86,43 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    String country = storage.read('zone') ?? "Select Zone";
-    String city = storage.read('area') ?? "Location";
+    // String country = storage.read('zone') ?? "Select Zone";
+    // String city = storage.read('area') ?? "Location";
 
     return ScreenUtilInit(
       designSize:  Size(414, 1553),
       child: Scaffold(
         drawer:  CustomDrawer(),
-
         appBar: AppBar(
           backgroundColor:  Color(0xffffffff),
           elevation: 0,
-          // 💡 2. استخدام Builder لفتح السايد بار برمجياً عند الضغط على الأيقونة ☰
           leading: Builder(
               builder: (context) {
                 return IconButton(
                   onPressed: () {
-                    Scaffold.of(context).openDrawer(); // فتح القائمة الجانبية بسلاسة
+                    Scaffold.of(context).openDrawer();
                   },
                   icon: Icon(
                       Icons.menu_rounded,
-                      color: const Color(0xff181725),
-                      size: 40.r
+                      color:  Color(0xff181725),
+                      size: 34.r
                   ),
                 );
               }
           ),
           actions: [
-            const Padding(
-              padding: EdgeInsets.only(right: 10),
+            Padding(
+              padding: EdgeInsets.only(right: 10).r,
               child: CartBadgeIcon(),
             ),
           ],
         ),
         resizeToAvoidBottomInset: false,
-        backgroundColor: const Color(0xffffffff),
+        backgroundColor:  Color(0xffffffff),
         body: index == 0
             ? SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(15).r,
+            padding:  EdgeInsets.all(15).r,
             child: Column(
               spacing: 15.h,
               children: [
@@ -206,7 +206,8 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
-                     StoreListView(scrollDirection: Axis.horizontal),
+                    StoreListView(
+                      products: categoryController.firstSectionProducts,),
                     Row(
                       spacing: 10.w,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,7 +227,7 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
-                     StoreListView(reverse: true),
+                    StoreListView(products: categoryController.secondSectionProducts, ),
                     Row(
                       spacing: 10.w,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -238,7 +239,7 @@ class _HomeState extends State<Home> {
                           fontWeight: FontWeight.w500,
                           fontSize: 18.sp,
                         ),
-                        const StoreText(
+                         StoreText(
                           value: "See all",
                           color: AppColor.mainColor,
                           fontWeight: FontWeight.w500,
@@ -250,7 +251,7 @@ class _HomeState extends State<Home> {
                       height: 120.h,
                       child: MainSectionListView(mainSections: mainSections),
                     ),
-                     StoreListView(),
+                    StoreListView(products: categoryController.thirdSectionProducts,),
                   ],
                 ),
               ],
@@ -269,8 +270,8 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              topRight: const Radius.circular(15).r,
-              topLeft: const Radius.circular(15).r,
+              topRight:  Radius.circular(15).r,
+              topLeft:  Radius.circular(15).r,
             ),
             boxShadow: [
               BoxShadow(
